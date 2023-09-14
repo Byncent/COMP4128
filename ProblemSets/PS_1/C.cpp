@@ -10,7 +10,8 @@ int main() {
     int sum = 0, num0 = -1, num1 = -1;
 
     // check if a and d are triangle numbers
-    for(int i=0; i <= a + d; i ++){
+    int ceil = max(a, d);
+    for(int i=0; i <= ceil; i ++){
         sum += i;
         if(sum == a){
             num0 = i + 1;
