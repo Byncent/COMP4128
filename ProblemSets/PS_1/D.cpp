@@ -1,29 +1,36 @@
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
+const int N = 1e6+5;
+int total[N], above[N];
+
 int main(){
-    int days, curr;
-    int currmax = 0, counter = 0, sum = 0;
 
-    cin >> days;
+    cin.tie(nullptr);
+    cin.sync_with_stdio(false);
 
-    for(int i = 0; i < days; i++){
-        cin >> curr;
+    int size;
+    long long int sum = 0;
+    cin >> size;
 
-        if (curr != 0){
-            currmax = max(curr, currmax);
-            sum -= curr;
-        } else{
-            cout << "val added: "<< counter * currmax << '\n';
-            sum += counter * currmax;
-            counter = 0;
-        }
-        counter ++;
+    for(int i = 1; i < size + 1; i ++){
+        int val;
+        cin >> val;
+        above[i] = val + 1;
+        total[i] = max(total[i-1], above[i]);
     }
 
-    sum += counter * currmax;
+    for(int i = size; i > 0; i --){
+        if(total[i] - total[i-1] > 1){
+            total[i-1] = total[i] - 1;
+        }
+        sum += total[i] - above[i];
+    }
 
     cout << sum << '\n';
+
     return 0;
+
 }

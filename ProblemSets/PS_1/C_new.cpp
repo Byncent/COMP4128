@@ -1,11 +1,12 @@
 #include <iostream>
-#include <string>
 
 using namespace std;
 
 int main() {
+    cin.tie(nullptr);
+    cin.sync_with_stdio(false);
+
     int a, b, c, d;
-    string res;
     cin >>a>>b>>c>>d;
     int sum = 0, num0 = -1, num1 = -1;
 
@@ -30,16 +31,16 @@ int main() {
     // check if there exist 0 and 1
     if(a == 0  && (b == 0 && c == 0)){
         for(int i = 0; i < num1; i++){
-            res += '1';
+            cout << '1';
         }
-        cout << res << '\n';
+        cout << '\n';
         return 0;
     }
     if(d == 0  && (b == 0 && c == 0)){
         for(int i = 0; i < num0; i++){
-            res += '0';
+            cout << '0';
         }
-        cout << res << '\n';
+        cout << '\n';
         return 0;
     }
 
@@ -54,29 +55,30 @@ int main() {
         return 0;
     }
 
-    int head1, tail1, mid1, head0, tail0;
-    head1 = c / num0;
-    tail0 = c % num0;
-    mid1 = (tail0 != 0);
-    head0 = num0 - tail0;
-    tail1 = num1 - head1 - mid1;
-
-    
-    for(int i = 0; i < head1; i ++){
-        res += '1';
-    }
-    for(int i = 0; i < head0; i ++){
-        res += '0';
-    }
-    if(mid1){
-        res += '1';
-    }
-    for(int i = 0; i < tail0; i ++){
-        res += '0';
-    }
-    for(int i = 0; i < tail1; i ++){
-        res += '1';
+    while(c > num0){
+        cout << '1';
+        num1 -= 1;
+        c -= num0;
     }
 
-    cout <<  res << '\n';
+    while(num0 > c){
+        cout << '0';
+        num0 -= 1;
+    }
+
+    cout << '1';
+    num1 -= 1;
+
+    while(num0 > 0){
+        cout << '0';
+        num0 -= 1;
+    }
+
+    while(num1 > 0){
+        cout << '1';
+        num1 -= 1;
+    }
+
+    cout << '\n';
+    return 0;
 }
