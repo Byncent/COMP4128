@@ -1,45 +1,54 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <stack>
 
 using namespace std;
 
+const int N = 100000;
+char minArr[N];
+
 int main(){
 
-    string s;
-    string t = "", u = "";
-    
+    cin.tie(nullptr);
+    cin.sync_with_stdio(false);
+
+    string s, u = "";
+    stack <char> t;
     cin >> s;
 
-    t += s[0];
-    s = s.substr(1, s.length() - 1);
-
-    while(s != ""){
-        // finding idx of minimum character
-        int idx = 0;
-        for (int i = 0; i < s.length(); i++)   
-            if (s[i] < s[idx])
-                idx = i;
-
-
-        if (s[idx] < t[t.length() - 1]){
-
-            t += s.substr(0, idx);
-            u += s[idx];
-            s = s.substr(idx+1, s.length() - idx - 1);
+    char currMin = 'z';
+    for(int i = s.length() - 1; i>=0; i--){
+        if(s[i] < currMin){
+            minArr[i] = s[i];
+            currMin = s[i];
         }else{
-            u += t[t.length() - 1];
-            t = t.substr(0, t.length() - 1);
-
-            if(t == ""){
-                t += s[0];
-                s = s.substr(1, s.length() - 1);
-            }
+            minArr[i] = currMin;
         }
     }
 
-    reverse(t.begin(), t.end());
-    u += t;
+    int i = 0;
+
+    while(i < s.length()){
+        if(t.empty()){
+            t.push(s[i]);
+            i++;
+            continue;
+        }
+
+        if(t.top() <= minArr[i]){
+            u += t.top();
+            t.pop();
+        } else{
+            t.push(s[i]);
+            i ++;
+        }
+    }
+
+    while(!t.empty()){
+        u += t.top();
+        t.pop();
+    }
     cout << u << '\n';
     return 0;
 }
