@@ -1,31 +1,38 @@
 #include <iostream>
 #include <string>
+#include<cmath>
 #include <algorithm>
 #include <set>
 #include <vector>
 
 using namespace std;
 
-const int N = 100100; // The number of additional nodes created can be as high as the next power of two up from N (2^17 = 131,072)
+#define OR 1
+#define XOR -1
+
+const int N = 131072; // The number of additional nodes created can be as high as the next power of two up from N (2^17 = 131,072)
 int tree[1 << 18]; // Initialize the tree with a size that accommodates the required number of nodes
 
 
-int query(int qL, int qR, int i = 1, int cL = 0, int cR = N) {
-    // The query range exactly matches this node's range of responsibility
-    if (cL == qL && cR == qR)
-        return tree[i];
+int update(int p, int v, int i = 1, int cL = 0, int cR = N);
+void debug(int i = 1, int cL = 0, int cR = N);
 
-    // We might need to query one or both of the children
-    int mid = (cL + cR) / 2;
-    int ans = 0;
 
-    // Query the part within the left child [cL, mid), if any
-    if (qL < mid) ans += query(qL, min(qR, mid), i * 2, cL, mid);
+int main() {
+    int n, m;
+    cin >> n >> m;
+    for(int i = 0; i < pow(2, n); i++){
+        int v;
+        cin >> v;
+        update(i, v);
+    }
 
-    // Query the part within the right child [mid, cR), if any
-    if (qR > mid) ans += query(max(qL, mid), qR, i * 2 + 1, mid, cR);
-
-    return ans;
+    for(int i = 0; i < m; i++){
+        int p, v;
+        cin >> p >> v;
+        update(p -1, v);
+        cout << tree[1] << '\n';
+    }
 }
 
 // p is the index in the array (0-based)
@@ -34,29 +41,35 @@ int query(int qL, int qR, int i = 1, int cL = 0, int cR = N) {
 // Instead of explicitly storing each node's range of responsibility [cL, cR),
 // we calculate it on the way down.
 // The root node is responsible for [0, n)
-void update(int p, int v, int i = 1, int cL = 0, int cR = N) {
+int update(int p, int v, int i, int cL, int cR) {
     if (cR - cL == 1) {
         // This node is a leaf, so apply the update
         tree[i] = v;
-        return;
+        return OR;
     }
 
     // Figure out which child is responsible for the index (p) being updated
     int mid = (cL + cR) / 2;
+    int op;
     if (p < mid)
-        update(p, v, i * 2, cL, mid);
+        op = update(p, v, i * 2, cL, mid);
     else
-        update(p, v, i * 2 + 1, mid, cR);
+        op = update(p, v, i * 2 + 1, mid, cR);
 
     // Once we have updated the correct child, recalculate our stored value.
-    tree[i] = tree[i * 2] + tree[i * 2 + 1];
+    if(op == OR)
+        tree[i] = tree[i * 2] | tree[i * 2 + 1];
+    else
+        tree[i] = tree[i * 2] ^ tree[i * 2 + 1];
+
+    return op * -1;
 }
 
 // Print the entire tree to stderr
 // Instead of explicitly storing each node's range of responsibility [cL, cR),
 // we calculate it on the way down.
 // The root node is responsible for [0, n)
-void debug(int i = 1, int cL = 0, int cR = N) {
+void debug(int i, int cL, int cR) {
     // Print current node's range of responsibility and value
     cerr << "tree[" << cL << "," << cR << ")=" << tree[i];
 
@@ -68,22 +81,5 @@ void debug(int i = 1, int cL = 0, int cR = N) {
     }
 }
 
-
-int main() {
-    int n;
-    cin >> n;
-
-    for (int i = 0; i < n; i++) {
-        int x;
-        cin >> x;
-
-        int best = 1 + query(0, x);
-        update(x, best);
-    }
-
-    cout << query(0, N) << '\n';
-
-    return 0;
-}
 
 
