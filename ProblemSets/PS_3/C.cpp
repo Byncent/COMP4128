@@ -44,21 +44,33 @@ int main(){
         for(ll j = 1; j <= nColours; j++){
             ll val;
             cin >> val;
+
+            // read in cost for painting
             if(trees[i] == uncoloured) costs[i][j] = val;
+
+            // if a tree is already painted then additional cost to paint it is 0
             else costs[i][j] = 0;
         }
     }
+
+    // preprocessing
     for(ll i = 1; i <= nTrees; i ++){
         for(ll j = 1; j <= nColours; j++){
             for(ll k = 0; k <= nScores; k++){
+
+                // cannot reach a beauty score of 0
                 if(k == 0){
                     dp[i][j][k] = INF;
                     continue;
                 }
+
+                // if tree i is already painted a colour that is not j
                 if(trees[i]!=j && trees[i] != uncoloured){
                     dp[i][j][k] = INF;
                     continue;
                 }
+
+                // base case
                 if( i == 1){
                     if(k == 1){
                         dp[1][j][k] = costs[1][j];
@@ -71,7 +83,7 @@ int main(){
         }
     }
 
-
+    // dp
     for(ll i = 2; i <= nTrees; i++){
         for(ll k = 1; k <= nScores; k++){
             for(ll j = 1; j <= nColours; j++){
@@ -93,13 +105,13 @@ int main(){
         sol = -1;
     }
 
-    for(int i = 1; i <= nTrees; i ++){
-        for(int j = 1; j <= nColours; j ++){
-            for(int k = 1; k <= nScores; k++){
-                cout << "dp[" << i << "][" << j << "][" << k << "] = " << dp[i][j][k] << '\n'; 
-            }
-        }
-    }
+    // for(int i = 1; i <= nTrees; i ++){
+    //     for(int j = 1; j <= nColours; j ++){
+    //         for(int k = 1; k <= nScores; k++){
+    //             cout << "dp[" << i << "][" << j << "][" << k << "] = " << dp[i][j][k] << '\n'; 
+    //         }
+    //     }
+    // }
 
     cout << sol << '\n';
 }
