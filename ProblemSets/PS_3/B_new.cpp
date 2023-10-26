@@ -21,7 +21,7 @@ ll recursion(ll bricks, ll blocksRem, ll colors){
     }
 
     ll res = 0;
-    for(ll i = 1; bricks - i >= blocksRem-1; i++){
+    for(ll i = 1; i <= bricks - blocksRem + 1; i++){
         ll val;
         if(dp[bricks-i][blocksRem-1]) val = dp[bricks-i][blocksRem-1];
         else val = recursion(bricks-i, blocksRem -1, colors);

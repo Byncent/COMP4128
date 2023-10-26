@@ -30,7 +30,7 @@ void bubbleSort(int n)
     cout << invCounter << '\n';
     cout << str << '\n';
 }
- 
+
 // Driver program to test above functions
 int main()
 {
