@@ -12,77 +12,45 @@
 using namespace std;
 
 typedef long long ll;
-typedef pair<ll, ll> pll;
+typedef pair<int, int> pint;
 
-const ll N = 1e6+7;
+const int N = 1e3+7;
 
-ll n, m;
-vector<pll> edges[N];  // Edges as pairs of (weight, vertex)
-bool in_tree[N];
-priority_queue<pll, vector<pll>, greater<pll>> pq;  // Min-heap priority queue
+int n, m, temp;
+priority_queue<pint, vector<pint>, greater<pint>> edges[N];  // Edges as pairs of (weight, vertex)
 
-void add_edge(ll u, ll v, ll w){
-    edges[u].push_back(make_pair(w, v));
-}
-
-
-ll mst(ll root) {
-    ll total_weight = 0;
-    in_tree[root] = true;  // (2)
-
-    for (auto edge : edges[root]) {
-        pq.emplace(edge.first, edge.second);
-    }
-
-    ll num_edges = 0;
-    while (!pq.empty()) {  // (3)
-        auto edge = pq.top();
-        pq.pop();
-
-        // If this edge goes to somewhere already in the tree, it's useless.
-        if (in_tree[edge.second])
-            continue;
-
-        in_tree[edge.second] = true;
-        total_weight += edge.first;
-        num_edges += 1;
-
-        for (auto edge : edges[edge.second]) {
-            pq.emplace(edge.first, edge.second);  // (4)
-        }
-    }
-
-    if(num_edges == n-1){
-        return total_weight;
-    } else{
-        return -1;
-    }
-    
+void add_edge(int u, int v, int w){
+    edges[u].push(make_pair(w, v));
 }
 
 int main(){
 
     cin >> n;
-    ll root_val = -1;
-    ll root_idx = -1;
-
-    for(ll i = 0; i < n; i ++){
-        ll val;
-        cin >> val;
-        if(val > root_val){
-            root_val = val;
-            root_idx = i + 1;
-        }
+    for(int i = 0; i < n; i ++){
+        cin >> temp;
     }
-    cout << "root:" << root << '\n';
+
     cin >> m;
-    for(ll i = 0; i < m; i ++){
-        ll u, v, w;
+    for(int i = 0; i < m; i ++){
+        int u, v, w;
         cin >> u >> v >> w;
-        add_edge(u, v, w);
+        add_edge(v, u, w);
     }
 
-    ll weight = mst(root_idx);
+    int weight = 0;
+    int root = -1;
+    for(int i = 1; i <= n; i ++){
+        if(edges[i].empty()){
+            if(root != -1 && root != i){
+                cout << -1 << '\n';
+                return 0;
+            }
+            root = i;
+        }else{
+            weight += edges[i].top().first;
+        }
+        
+    }
     cout << weight << '\n';
     return 0;
 }
