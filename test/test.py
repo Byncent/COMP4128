@@ -1,52 +1,52 @@
 from random import randint
 import subprocess
 
-LIMA = 5
-LIMM = 5
-LIMQ = 5
-LIMC = 5
+limn = 5
+limm = 10
 
 randint(0, 0)
 
 def gen():
     res = ""
-    n = randint(1, LIMA)
-    res += f"{str(n)}\n"
-    arr = []
-    for _ in range(n):
-        arr.append(randint(0, LIMQ))
+    n = randint(2, limn)
+    res += f"{str(n)} "
+    m = randint(n-1, n * (n-1)/2)
+    res += f"{str(m)} \n"
 
-    arr.sort(reverse=True)
-
-    for item in arr:
-        res += f"{str(item)} "
-
-    res += '\n'
-
-    if n == 1:
-        res += "0\n"
-        return res
-    
-    m = randint(n-1, LIMM)
-    res += f"{str(m)}\n"
-
+    pairs = {1:[]}
 
     i = 0
-    while (i < m):
-        print(f"i = {i}")
-        a = randint(1, n-1)
-        b = randint(a, n)
-        if arr[a-1] <= arr[b-1]:
+
+    while(i < m):
+        a = randint(1, n)
+        b = randint(1, n)
+
+        if a not in pairs:
+            print("case 1")
+            pairs[a] = [b]
+
+
+
+        if b not in pairs:
+            print("case 3")
+            pairs[b] = [a]
+
+            
+
+        if(a == b) or (b in pairs[a]) or (a in pairs[b]):
             continue
-        c = randint(1, LIMC)
-        res += f"{a} {b} {c}\n"
-        i += 1
+            
+        pairs[a].append(b)
+        pairs[b].append(a)
+
+        res += f"{str(a)} {str(b)}\n"
+        i+= 1
 
     return res
 
 
 
-EXE = "./A"
+EXE = "./C"
 TEST = "./test"
 
 if __name__ == "__main__":

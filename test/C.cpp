@@ -22,41 +22,39 @@ ll n, m;
 ll low[N];
 ll preorder[N];
 ll T = 0;
-bool bridge = false;
-vector<ll> edges[N];
-set<pair<ll, ll>> sol;
+ll bridges = 0;
+vector<ll> bi_edges[N];
+vector<ll> uni_edges[N];
 
 void dfs(ll u, ll from = -1) {
     low[u] = preorder[u] = T++;
     // cout << "update: low[" << u <<"] = preorder[" << u <<"] = " << low[u] << '\n';
     
-    for (ll v : edges[u]) {
+    for (ll v : bi_edges[u]) {
         // Ignore the edge to our parent in the dfs
         if (v == from)
             continue;
-        cout << "curr edge: " << u << " - " <<v << '\n';
-        cout << "low[" <<u<<"] = " << low[u] << ", preorder[" <<u<<"] = " <<preorder[u] <<  ", low[" <<v<<"] = " << low[v]<<", preorder[" << v << "] = " <<preorder[v]<< '\n';
+
         // cout << "  curr edge: " << u << " - " << v << '\n';
         // cout << "  preorder[v]: " << preorder[v] << '\n';
-        
+
         // Update the lowest value in the preorder sequence that we can reach
         if (preorder[v] != -1){
-            if (low[u]>= preorder[v]){
-                sol.insert(make_pair(u, v));
-                cout << "added\n";
-            }else{
-                cout << "not added\n";
+            if (low[u]> preorder[v]){
+                uni_edges[u].push_back(v);
             }
-            
-            
             low[u] = min(low[u], preorder[v]);
         } else {
-            sol.insert(make_pair(u, v));
-            dfs(v,  u);
+            dfs(v, u);
             low[u] = min(low[u], low[v]);
+            
             // If we haven't visited v before, check to see if we have a bridge
-            if (low[v] == preorder[v]){
-                bridge = true;
+            if (low[v] == preorder[v] && low[v] != 0){
+                bridges ++;
+            }else{
+                // cout << "# edge added: " << u << " ==> " << v << '\n';
+                // cout << "# low[v] = " << low[v] << ", preorder[v] = " << preorder[v] << '\n';
+                uni_edges[u].push_back(v);
             }
         }
     }
@@ -69,8 +67,8 @@ int main(){
     for(ll i = 0; i < m; i ++){
         ll u, v;
         cin >> u >> v;
-        edges[u].push_back(v);
-        edges[v].push_back(u);
+        bi_edges[u].push_back(v);
+        bi_edges[v].push_back(u);
     }
 
     for(ll i = 0; i <= n+10; i ++){
@@ -78,15 +76,16 @@ int main(){
     }
 
     dfs(1);
-    // cout << "v_count = " << v_count << '\n';
+
     // cout << "================================\n";
-    if(bridge){
+    if(bridges!=0){
         cout << 0 << '\n';
     } else{
-        for(auto it : sol){
-            cout << it.first << ' ' << it.second << '\n';
+        for(ll u = 0; u < m; u ++){
+            for(ll v : uni_edges[u]){
+                cout << u << ' ' << v << '\n';
+            }
         }
-
     }
 
     return 0;
