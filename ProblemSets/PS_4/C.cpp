@@ -14,7 +14,7 @@ using namespace std;
 typedef long long ll;
 
 //Constants definition
-const ll N = 1e6+7;
+const ll N = 3 * 1e5+7;
 
 // Global vars definition
 ll n, m;
@@ -34,21 +34,16 @@ void dfs(ll u, ll from = -1) {
         // Ignore the edge to our parent in the dfs
         if (v == from)
             continue;
-        cout << "curr edge: " << u << " - " <<v << '\n';
-        cout << "low[" <<u<<"] = " << low[u] << ", preorder[" <<u<<"] = " <<preorder[u] <<  ", low[" <<v<<"] = " << low[v]<<", preorder[" << v << "] = " <<preorder[v]<< '\n';
+        // cout << "curr edge: " << u << " - " <<v << '\n';
+        // cout << "low[" <<u<<"] = " << low[u] << ", preorder[" <<u<<"] = " <<preorder[u] <<  ", low[" <<v<<"] = " << low[v]<<", preorder[" << v << "] = " <<preorder[v]<< '\n';
         // cout << "  curr edge: " << u << " - " << v << '\n';
         // cout << "  preorder[v]: " << preorder[v] << '\n';
         
         // Update the lowest value in the preorder sequence that we can reach
         if (preorder[v] != -1){
-            if (low[u]>= preorder[v]){
+            if (preorder[u]>= preorder[v]){
                 sol.insert(make_pair(u, v));
-                cout << "added\n";
-            }else{
-                cout << "not added\n";
             }
-            
-            
             low[u] = min(low[u], preorder[v]);
         } else {
             sol.insert(make_pair(u, v));
