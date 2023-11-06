@@ -1,13 +1,25 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <string>
+#include <cmath>
+#include <algorithm>
+#include <set>
+#include <vector>
+#include <stack>
+#include <queue>
+#include <functional>
 
 using namespace std;
+
+// Hash defines
+#define TRUE 0
+#define FALSE 1
 
 // Typedefs
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 
-//Constants definition
+// Constants definition
 const int N = 1e5+7;
 
 // Global vars definition
