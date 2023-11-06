@@ -20,13 +20,13 @@ using namespace std;
 typedef long long ll;
 typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
-struct edge{
+typedef struct Edge{
     int distance;
     int vertex;
     int type;
 
     // Overload the '<' operator
-    bool operator<(edge const& other) const {
+    bool operator<(Edge const& other) const {
         if(distance == other.distance){
             return type < other.type;
         }else{
@@ -35,29 +35,28 @@ struct edge{
     }
 
     // Overload the '>' operator
-    bool operator>(edge const& other) const {
+    bool operator>(Edge const& other) const {
         if(distance == other.distance){
             return type > other.type;
         }else{
             return distance > other.distance;
         }
     }
-};
-
-typedef struct edge Edge;
+} Edge;
 
 //Constants definition
-const int N = 1e5+7;
+const int N = 1e6+7;
 
 // Global vars definition
-int n = 0;
-vector<edge> edges[N];
+int n, m, k;
+vector<Edge> edges[N];
 int dist[N];
 bool seen[N];
 
-priority_queue<edge, vector<edge>, greater<edge>> pq;
+priority_queue<Edge, vector<Edge>, greater<Edge>> pq;
 
-void dijkstra(int s) {
+int dijkstra(int s) {
+    int c = 0;
     Edge e;
     e.distance=0;
     e.vertex=s;
@@ -68,34 +67,62 @@ void dijkstra(int s) {
     while (!pq.empty()) {
         // choose (d, v) so that d is minimal
         // i.e. the closest unvisited vertex
-        edge cur = pq.top();
+        Edge cur = pq.top();
         pq.pop();
         int v = cur.vertex, d = cur.distance;
         
-        if (seen[v])
+        if (seen[v]){
+            cout << "hi\n";
+            if(cur.type == TRAIN){
+                c ++;
+            }
             continue;
+        }
+            
         dist[v] = d;
         seen[v] = true;
         
         // relax all edges from v
-        for (edge nxt : edges[v]) {
+        for (Edge nxt : edges[v]) {
             int u = nxt.vertex, weight = nxt.distance;
             if (!seen[u]){
-                Edge new_edge;
-                new_edge.distance = d + weight;
-                new_edge.type = cur.type|nxt.type;
-                new_edge.vertex = u;
+                Edge new_edge = {d + weight, u, cur.type|nxt.type};
                 pq.push(new_edge);
+            }else{
+                cout << "hello\n";
+                if(nxt.type == TRAIN){
+                    c ++;
+                }
             }
         }
     }
+    return c;
 }
 
 
 int main(){
-    cin >> n;
+    cin >> n >> m >> k;
 
-    
+    for(int i = 0; i < m; i ++){
+        int u, v, x;
+        cin >> u >> v >> x;
+
+        Edge e1 = {v, x, CAR};
+        Edge e2 = {u, x, CAR};
+        edges[u].push_back(e1);
+        edges[v].push_back(e2);
+    }
+
+    for(int i = 0; i < k; i ++){
+        int s, y;
+        cin >> s >> y;
+
+        Edge e = {s, y, TRAIN};
+        edges[1].push_back(e);
+    }
+
+    int res = dijkstra(1);
+    cout << res << '\n';
 
     return 0;
 }

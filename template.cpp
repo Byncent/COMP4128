@@ -23,7 +23,7 @@ typedef pair<ll, ll> pll;
 const int N = 1e5+7;
 
 // Global vars definition
-int n = 0;
+int n;
 
 int main(){
     cin >> n;
