@@ -24,7 +24,7 @@ def solve(s):
 
 MAX_LEN = 10
 CASES_PER_LEN = 30
-EXE = "./A"
+EXE = "./A_v1"
 
 if __name__ == "__main__":
     for l in range(1, MAX_LEN):
@@ -37,4 +37,7 @@ if __name__ == "__main__":
                 print(f"Input '{s}'")
                 print(f"Expected '{ans}'")
                 print(f"Got '{got}'")
+                print("Character by character:")
+                for i, s in enumerate(got):
+                    print(f"{i}th character is {s} with ascii value {ord(s)}")
                 exit(1)
