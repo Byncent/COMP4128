@@ -18,111 +18,126 @@ using namespace std;
 
 // Typedefs
 typedef long long ll;
-typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 typedef struct Edge{
-    int distance;
-    int vertex;
-    int type;
+    ll vertex;
+    ll distance;
 
     // Overload the '<' operator
     bool operator<(Edge const& other) const {
-        if(distance == other.distance){
-            return type < other.type;
-        }else{
-            return distance < other.distance;
-        }
+        return distance < other.distance;
     }
 
     // Overload the '>' operator
     bool operator>(Edge const& other) const {
-        if(distance == other.distance){
-            return type > other.type;
-        }else{
-            return distance > other.distance;
-        }
+        return distance > other.distance;
     }
 } Edge;
 
 //Constants definition
-const int N = 1e6+7;
+const ll N = 1e6+7;
+const ll INF = 1e15+10;
 
 // Global vars definition
-int n, m, k;
+ll n, m, k;
 vector<Edge> edges[N];
-int dist[N];
+vector<Edge> routes;
+ll deg[N];
+ll dist[N];
 bool seen[N];
 
-priority_queue<Edge, vector<Edge>, greater<Edge>> pq;
+priority_queue<Edge, vector<Edge>, greater<Edge> > pq;
 
-int dijkstra(int s) {
-    int c = 0;
-    Edge e;
-    e.distance=0;
-    e.vertex=s;
-    e.type=CAR;
+void dijkstra(ll s) {
+
+    fill(dist, dist + N, INF);
+    Edge e = {s, 0};
 
     pq.push(e);  // distance to itself is zero
-    
+    dist[s] = 0;
     while (!pq.empty()) {
         // choose (d, v) so that d is minimal
         // i.e. the closest unvisited vertex
         Edge cur = pq.top();
         pq.pop();
-        int v = cur.vertex, d = cur.distance;
-        
+        ll v = cur.vertex;
+        // cout << "visiting node: " << cur.vertex;
         if (seen[v]){
-            cout << "hi\n";
-            if(cur.type == TRAIN){
-                c ++;
-            }
+            // cout << " but skipped\n";
             continue;
         }
-            
-        dist[v] = d;
-        seen[v] = true;
-        
+
+        seen[v] = 1;
+
+        // cout << " for the first time\n";
+
         // relax all edges from v
         for (Edge nxt : edges[v]) {
-            int u = nxt.vertex, weight = nxt.distance;
-            if (!seen[u]){
-                Edge new_edge = {d + weight, u, cur.type|nxt.type};
-                pq.push(new_edge);
-            }else{
-                cout << "hello\n";
-                if(nxt.type == TRAIN){
-                    c ++;
-                }
+            ll u = nxt.vertex, weight = nxt.distance;
+            
+            if(dist[v]+weight < dist[u]){
+                dist[u] = dist[v]+weight;
+                deg[u] = 1;
+                pq.push(Edge{u, dist[u]});
+            } else if(dist[v]+weight == dist[u]){
+                deg[u] ++;
             }
         }
     }
-    return c;
 }
-
 
 int main(){
     cin >> n >> m >> k;
 
-    for(int i = 0; i < m; i ++){
-        int u, v, x;
+    for(ll i = 0; i < m; i ++){
+        ll u, v, x;
         cin >> u >> v >> x;
 
-        Edge e1 = {v, x, CAR};
-        Edge e2 = {u, x, CAR};
+        Edge e1 = {v, x};
+        Edge e2 = {u, x};
         edges[u].push_back(e1);
         edges[v].push_back(e2);
     }
 
-    for(int i = 0; i < k; i ++){
-        int s, y;
+    for(ll i = 0; i < k; i ++){
+        ll s, y;
         cin >> s >> y;
 
-        Edge e = {s, y, TRAIN};
-        edges[1].push_back(e);
+        Edge e1 = {s, y};
+        routes.push_back(e1);
+        edges[1].push_back(e1);
     }
 
-    int res = dijkstra(1);
-    cout << res << '\n';
+    // for(ll i = 1; i <= n; i ++){
+    //     for(Edge e : edges[i]){
+    //         cout << "edge: " << i << " - " << e.vertex << " = " << e.distance << '\n';
+    //     }
+    // }
+
+    dijkstra(1);
+
+    // for(ll i = 0; i <= n; i ++){
+    //     cout << "deg " << i << ": " << deg[i] << '\n';
+    // }
+
+    // for(ll i = 1;i <=n; i ++){
+    //     cout << "dist to " << i << ": " << dist[i] << '\n';
+    // }
+    ll c = 0;
+    for(Edge e : routes){
+        if(e.distance > dist[e.vertex]){
+            c++;
+
+        }else if (e.distance  ==  dist[e.vertex] && deg[e.vertex] >1 ){
+
+            c++;
+            deg[e.vertex] --;
+            
+        }
+    }
+
+    cout << c << '\n';
+
 
     return 0;
 }
