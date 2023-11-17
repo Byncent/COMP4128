@@ -12,7 +12,7 @@
 using namespace std;
 
 typedef long long ll;
-const ll INF = 1e18;
+const ll INF = 1e15;
 struct cell{
     ll v = 0;
     ll c = 0;
@@ -116,14 +116,13 @@ cell graph[50][50];
 int main(){
     ll n, m, c;
     cin >> n >> m >> c;
-    FlowNetwork network(n * m + 1);
+    FlowNetwork network(n * m + 2);
 
     // node index
     ll cnt = 0;
-    ll s, t = n*m;
-
-    for(ll i = 0; i < n; i ++){
-        for(ll j = 0; j < m; j ++){
+    ll s, t;
+    for(ll i = 0; i < m; i ++){
+        for(ll j = 0; j < n; j ++){
             char chr;
             cin >> chr;
 
@@ -138,7 +137,7 @@ int main(){
             }else if(chr == 'B'){
                 graph[i][j].c = 0;
                 s = cnt;
-                cout << "root: [" << i << "]["<< j << "] = " << s << "\n";
+                // cout << "root: [" << i << "]["<< j << "] = " << s << "\n";
 
             // otherwise, the capacity maps to the alphabetical index (base 1, as 0 maps to infinity)
             }else{
@@ -148,33 +147,34 @@ int main(){
             cnt ++;
         }
     }
+    t = cnt;
 
     // map 0 to infinity    
     weights[0] = INF;
     for(ll i = 1; i <= c; i++){
         cin >> weights[i];
     }
-    for(ll i = 0; i < n; i ++){
-        for(ll j = 0; j <m; j ++){
+    for(ll i = 0; i < m; i ++){
+        for(ll j = 0; j <n; j ++){
 
-            if(i - 1 < 0 || j - 1 < 0 || i + 1 >= n || j + 1 >= m){
-                cout << "edge added: [" << i << "][" << j << "] - " <<"sink\n";
+            if(i - 1 < 0 || j - 1 < 0 || i + 1 >= m || j + 1 >= n){
+                // cout << "edge added: [" << i << "][" << j << "] - " <<"sink = " << INF <<"\n";
                 network.add_edge(graph[i][j].v, t, INF);
             }
             if(i-1 >=0){
-                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i-1 << "][" << j << "]\n";
+                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i-1 << "][" << j << "] = " << weights[graph[i-1][j].c]<< "\n";
                 network.add_edge(graph[i][j].v, graph[i-1][j].v, weights[graph[i-1][j].c]);
             }
             if(j-1 >=0){
-                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j-1 << "]\n";
+                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j-1 << "] = " << weights[graph[i][j-1].c] << "\n";
                 network.add_edge(graph[i][j].v, graph[i][j-1].v, weights[graph[i][j-1].c]);
             }
-            if(i+1 <n){
-                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i+1 << "][" << j << "]\n";
+            if(i+1 <m){
+                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i+1 << "][" << j << "] = " << weights[graph[i+1][j].c] << "\n";
                 network.add_edge(graph[i][j].v, graph[i+1][j].v, weights[graph[i+1][j].c]);
             }
-            if(j+1 <m){
-                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j+1 << "]\n";
+            if(j+1 <n){
+                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j+1 << "] = " <<  weights[graph[i][j+1].c] << "\n";
                 network.add_edge(graph[i][j].v, graph[i][j+1].v, weights[graph[i][j+1].c]);
             }
             
