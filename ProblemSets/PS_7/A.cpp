@@ -171,7 +171,7 @@ int main(){
                 // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i+1 << "][" << j << "]\n";
                 network.add_edge(graph[i][j].v, graph[i+1][j].v, weights[graph[i+1][j].c]);
             }
-            if(j+1 <n){
+            if(j+1 <m){
                 // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j+1 << "]\n";
                 network.add_edge(graph[i][j].v, graph[i][j+1].v, weights[graph[i][j+1].c]);
             }
