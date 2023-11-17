@@ -138,11 +138,13 @@ int main(){
             }else if(chr == 'B'){
                 graph[i][j].c = 0;
                 s = cnt;
+                cout << "root: [" << i << "]["<< j << "] = " << s << "\n";
 
             // otherwise, the capacity maps to the alphabetical index (base 1, as 0 maps to infinity)
             }else{
                 graph[i][j].c = chr - 'a' + 1;
             }
+            // cout << "cnt = " << cnt << '\n';
             cnt ++;
         }
     }
@@ -156,23 +158,23 @@ int main(){
         for(ll j = 0; j <m; j ++){
 
             if(i - 1 < 0 || j - 1 < 0 || i + 1 >= n || j + 1 >= m){
-                // cout << "edge added: [" << i << "][" << j << "] - " <<"sink\n";
+                cout << "edge added: [" << i << "][" << j << "] - " <<"sink\n";
                 network.add_edge(graph[i][j].v, t, INF);
             }
             if(i-1 >=0){
-                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i-1 << "][" << j << "]\n";
+                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i-1 << "][" << j << "]\n";
                 network.add_edge(graph[i][j].v, graph[i-1][j].v, weights[graph[i-1][j].c]);
             }
             if(j-1 >=0){
-                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j-1 << "]\n";
+                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j-1 << "]\n";
                 network.add_edge(graph[i][j].v, graph[i][j-1].v, weights[graph[i][j-1].c]);
             }
             if(i+1 <n){
-                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i+1 << "][" << j << "]\n";
+                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i+1 << "][" << j << "]\n";
                 network.add_edge(graph[i][j].v, graph[i+1][j].v, weights[graph[i+1][j].c]);
             }
             if(j+1 <m){
-                // cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j+1 << "]\n";
+                cout << "edge added: [" << i << "][" << j << "] - " <<"[" << i << "][" << j+1 << "]\n";
                 network.add_edge(graph[i][j].v, graph[i][j+1].v, weights[graph[i][j+1].c]);
             }
             
