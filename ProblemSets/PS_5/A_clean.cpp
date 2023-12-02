@@ -20,7 +20,6 @@ typedef pair<ll, ll> pll;
 
 // Structs
 typedef struct Edge{
-    int side;
     int coord;
     int steps;
 } Edge;
@@ -44,7 +43,6 @@ void bfs() {
     Edge start;
     start.coord = 0;
     start.steps = 0;
-    start.side = LEFT;
     q.push(start);
     
     while (!q.empty()) {
@@ -72,7 +70,6 @@ void add_edge(int pos, int height, int from, int to){
     Edge e;
     e.coord = min(height, n)*2+to;
     e.steps = 0;
-    e.side = to;
     edges[min(pos, n)*2+from].push_back(e);
 }
 
