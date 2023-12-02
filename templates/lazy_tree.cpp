@@ -36,7 +36,6 @@ void recalculate(int id, long long l, long long r) {
 }
 
 void update_lazy(int id, long long v, long long l, long long r) {
-    cout << "id: " << id << '\n';
     lazyadd[id] += v;
     recalculate(id, l, r);
 }

@@ -10,10 +10,6 @@
 
 using namespace std;
 
-// Hash defines
-#define TRUE 0
-#define FALSE 1
-
 // Typedefs
 typedef long long ll;
 typedef pair<int, int> pii;
