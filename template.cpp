@@ -1,18 +1,9 @@
-#include <iostream>
-#include <string>
-#include <cmath>
-#include <algorithm>
-#include <set>
-#include <vector>
-#include <stack>
-#include <queue>
-#include <functional>
+#include <bits/stdc++.h>
 
 using namespace std;
 
 // Typedefs
 typedef long long ll;
-typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 
 // Constants definition
