@@ -18,108 +18,124 @@ using namespace std;
 
 // Typedefs
 typedef long long ll;
+typedef pair<int, int> pii;
 typedef pair<ll, ll> pll;
 typedef struct Edge{
-    ll to;
-    ll dist;
+    int vertex;
+    int distance;
+    int type;
+
+    // Overload the '<' operator
+    bool operator<(Edge const& other) const {
+        if(distance == other.distance){
+            return type < other.type;
+        }else{
+            return distance < other.distance;
+        }
+    }
 
     // Overload the '>' operator
     bool operator>(Edge const& other) const {
-        return dist > other.dist;
+        if(distance == other.distance){
+            return type > other.type;
+        }else{
+            return distance > other.distance;
+        }
     }
 } Edge;
 
 //Constants definition
-const ll N = 1e6+7;
-const ll INF = 1e15+10;
+const int N = 1e6+7;
 
 // Global vars definition
-ll n, m, k;
-vector<Edge> G[N];
-pll routes[N];
-ll deg[N];
-ll d[N];
-bool done[N];
+int n, m, k;
+vector<Edge> edges[N];
+int dist[N];
+bool seen[N];
 
-priority_queue<Edge, vector<Edge>, greater<Edge> > q;
+priority_queue<Edge, vector<Edge>, greater<Edge> > pq;
 
-void dijkstra(int s){
+int dijkstra(int s) {
+    int c = 0;
+    Edge e = {s, 0, TRAIN};
 
-    for (int i =0;i<=n;i++)
-        d[i]=INF;
-    d[s]=0;
-    q.push((Edge){0,s});
-    while (!q.empty())
-    {
-        Edge x = q.top();q.pop();
-        int u = x.to;
-        if (done[u])continue;
-        done[u]=1;
-        for (Edge e : G[u]) {
-            if (d[e.to] == d[u]+e.dist)
-                deg[e.to]++;
-            if (d[e.to] > d[u]+e.dist)
-            {
-                d[e.to] = d[u] + e.dist;
-                deg[e.to]=1;
-                q.push((Edge){d[e.to],e.to});
+    pq.push(e);  // distance to itself is zero
+
+    while (!pq.empty()) {
+        // choose (d, v) so that d is minimal
+        // i.e. the closest unvisited vertex
+        Edge cur = pq.top();
+        pq.pop();
+        int v = cur.vertex, d = cur.distance;
+
+        // cout << "visiting node: " << cur.vertex << '\n';
+        if (seen[v]){
+;
+            if(cur.type == TRAIN){
+                // cout << "edge: " << cur.vertex << " is visited and removed\n";
+                c ++;
+            }
+            continue;
+        }
+
+        dist[v] = d;
+        seen[v] = true;
+
+        // relax all edges from v
+        for (Edge nxt : edges[v]) {
+            // cout << "edge: " << cur.vertex << " - " << nxt.vertex;
+            int u = nxt.vertex, weight = nxt.distance;
+            if (!seen[u]){
+
+                // cout << " is added\n";
+                Edge new_edge = {u, d + weight, cur.type & nxt.type};
+                pq.push(new_edge);
+            }else{
+                // cout << " is NOT added\n";
+                if(nxt.type == TRAIN){
+                    c ++;
+                }
             }
         }
     }
+    return c;
 }
+
 
 int main(){
     cin >> n >> m >> k;
 
-    for(ll i = 0; i < m; i ++){
-        ll u, v, x;
+    for(int i = 0; i < m; i ++){
+        int u, v, x;
         cin >> u >> v >> x;
 
-        Edge e1 = {v, x};
-        Edge e2 = {u, x};
-        G[u].push_back(e1);
-        G[v].push_back(e2);
+        Edge e1 = {v, x, CAR};
+        Edge e2 = {u, x, CAR};
+        edges[u].push_back(e1);
+        edges[v].push_back(e2);
     }
 
-    for(ll i = 0; i < k; i ++){
-        ll s, y;
+    for(int i = 0; i < k; i ++){
+        int s, y;
         cin >> s >> y;
-        Edge e1 = {s, y};
-        routes[i] = make_pair(s, y);
-        G[1].push_back(e1);
+
+        Edge e1 = {s, y, TRAIN};
+        Edge e2 = {1, y, TRAIN};
+        edges[1].push_back(e1);
     }
 
-    // for(ll i = 1; i <= n; i ++){
+    // for(int i = 1; i <= n; i ++){
     //     for(Edge e : edges[i]){
     //         cout << "edge: " << i << " - " << e.vertex << " = " << e.distance << '\n';
     //     }
     // }
 
-    dijkstra(1);
+    int res = dijkstra(1);
+    cout << res << '\n';
 
-    // for(ll i = 0; i <= n; i ++){
-    //     cout << "deg " << i << ": " << deg[i] << '\n';
-    // }
-
-    // for(ll i = 1;i <=n; i ++){
+    // for(int i = 1;i <=n; i ++){
     //     cout << "dist to " << i << ": " << dist[i] << '\n';
     // }
-    ll c = 0;
-    for(int i = 0 ; i < k; i ++){
-
-        ll v = routes[i].first;
-        ll ds = routes[i].second;
-
-        if(ds > d[v]){
-            c++;
-        }else if (ds == d[v] && deg[v] >1 ){
-            c++;
-            deg[v] --;
-        }
-    }
-
-    cout << c << '\n';
-
-
     return 0;
 }
+

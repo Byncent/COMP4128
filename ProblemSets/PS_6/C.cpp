@@ -185,6 +185,7 @@ ll init(ll i = 1, ll l = 0, ll r = n, ll max_val = n_nodes){
             tree[i].min_absent = vals[l];
             tree[i].min_pres = INF;
         }else{
+            
             tree[i].min_absent = min(init(i*2, l, mid),  init(i*2+1, mid, r));
             tree[i].min_pres = INF;
         }
@@ -212,7 +213,7 @@ int main(){
 
     for(ll i = 0; i < n; i ++){
         update(m[ops[i].l], m[ops[i].r], ops[i].type);
-        cout << tree
+        cout << tree;
     }
 
 }

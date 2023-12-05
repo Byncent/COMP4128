@@ -164,7 +164,6 @@ int main(){
                 }
             }
         }
-
         ll res = network.dinic(0, n*n+1);
         cout << "Case "<< i << ": "<<res << '\n';
     }
