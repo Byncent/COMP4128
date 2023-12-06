@@ -45,11 +45,11 @@ void dijkstra(ll s) {
     fill(dist, dist + N, INF);
     Edge e = {s, 0};
 
-    pq.push(e);  // w to itself is zero
+    pq.push(e);  // distance to itself is zero
     dist[s] = 0;
     while (!pq.empty()) {
         // choose (d, v) so that d is minimal
-        // i.e. the closest unvisited v
+        // i.e. the closest unvisited vertex
         Edge cur = pq.top();
         pq.pop();
         ll v = cur.v;
@@ -73,13 +73,40 @@ void dijkstra(ll s) {
     }
 }
 
-ll n, m, k;
 
+ll n, C;
+set<pll> mountains;
 int main(){
-    cin >> n >> m;
-    for(int i = 0; i < m; i ++){
-        int u, v, w;
-        cin >> u >> v >> w;
-        edges[u].push_back(Edge{v, w});
+    cin >> n >> C;
+    ll h1, h2;
+    cin >> h1;
+
+    mountains.insert(make_pair(h1, 0));
+
+    for(ll i = 1; i < n; i ++){
+
+        cin >> h2;
+
+        auto it = mountains.upper_bound(make_pair(h2, i));
+        if(it != mountains.end()){
+            pll a = *it;
+            edges[a.second].push_back(Edge{i, C});
+        }
+
+        mountains.insert(make_pair(h2, i));
+
+        edges[i-1].push_back(Edge{i, abs(h1-h2)});
+
+        h1 = h2;
     }
+
+    // for(ll i = 0; i < n; i ++){
+    //     for(Edge e : edges[i]){
+    //         cout << "edge : " << i << " - " << e.v << " = " << e.w << '\n';
+    //     }
+    // }
+
+    dijkstra(0);
+
+    cout << dist[n-1] << '\n';
 }

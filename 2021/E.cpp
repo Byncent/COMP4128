@@ -73,13 +73,44 @@ void dijkstra(ll s) {
     }
 }
 
-ll n, m, k;
+ll n, s, f, m, g;
+vector<int> gods[N];
 
 int main(){
-    cin >> n >> m;
+    cin >> n >> s >> f >> m >> g;
+
+    for(int i = 1; i <= n; i ++){
+        int cnt;
+        cin >> cnt;
+        for(int j = 0; j < cnt; j ++){
+            int god;
+            cin >> god;
+            gods[god].push_back(i);
+        }
+    }
+
     for(int i = 0; i < m; i ++){
         int u, v, w;
         cin >> u >> v >> w;
         edges[u].push_back(Edge{v, w});
+        edges[v].push_back(Edge{u, w});
     }
+
+    for(int i = 1; i <= g; i ++){
+        int cost;
+        cin >> cost;
+
+        for(int town : gods[i]){
+            edges[town].push_back(Edge{n+i, cost});
+            edges[n+i].push_back(Edge{town, 0});
+        }
+    }
+
+    dijkstra(s);
+    if(dist[f] >= INF){
+        cout << -1 << '\n';
+    }else{
+        cout << dist[f] << '\n';
+    }
+
 }
